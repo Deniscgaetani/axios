@@ -1,12 +1,21 @@
 import React, {Component} from 'react';
 
 import './NewPost.css';
+import axios from "axios";
 
 class NewPost extends Component {
     state = {
         title: '',
         content: '',
         author: 'Max'
+    }
+
+    postDataHandler = async () => {
+        const data = {
+            ...this.state
+        }
+        const postMethod = await axios.post('https://jsonplaceholder.cypress.io/posts/', data);
+        console.log(postMethod);
     }
 
     render() {
@@ -24,7 +33,7 @@ class NewPost extends Component {
                     <option value="Max">Max</option>
                     <option value="Manu">Manu</option>
                 </select>
-                <button>Add Post</button>
+                <button onClick={this.postDataHandler}>Add Post</button>
             </div>
         );
     }
