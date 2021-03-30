@@ -1,26 +1,44 @@
 import React, {Component} from 'react';
+import axios from 'axios';
+import {Redirect} from 'react-router-dom';
 
 import './NewPost.css';
-import axios from "axios";
 
 class NewPost extends Component {
     state = {
         title: '',
         content: '',
-        author: 'Max'
+        author: 'Max',
+        submitted: false
     }
 
-    postDataHandler = async () => {
+    componentDidMount() {
+        // If unauth => this.props.history.replace('/posts');
+        console.log(this.props);
+    }
+
+    postDataHandler = () => {
         const data = {
-            ...this.state
-        }
-        const postMethod = await axios.post('https://jsonplaceholder.cypress.io/posts/', data);
-        console.log(postMethod);
+            title: this.state.title,
+            body: this.state.content,
+            author: this.state.author
+        };
+        axios.post('/posts', data)
+            .then(response => {
+                console.log(response);
+                this.props.history.replace('/posts');
+                // this.setState( { submitted: true } );
+            });
     }
 
     render() {
+        let redirect = null;
+        if (this.state.submitted) {
+            redirect = <Redirect to="/posts"/>;
+        }
         return (
             <div className="NewPost">
+                {redirect}
                 <h1>Add a Post</h1>
                 <label>Title</label>
                 <input type="text" value={this.state.title}
